@@ -1,427 +1,411 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2299.77">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+<meta charset="UTF-8">
+<title>Defend the Castle</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0d2a0d;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:'Courier New',monospace;color:#fff;overflow:hidden;}
+#wrap{position:relative;width:560px;}
+canvas{display:block;border:3px solid #4ec94e;width:560px;height:200px;image-rendering:pixelated;}
+#hud{display:flex;justify-content:space-between;padding:5px 12px;background:#0d2a0d;border:2px solid #4ec94e;border-bottom:none;font-size:13px;}
+#hud span{color:#ffe066;font-weight:bold;}
+#qzone{background:#0d2a0d;border:2px solid #4ec94e;border-top:none;padding:10px 14px;text-align:center;}
+#question{font-size:26px;letter-spacing:3px;margin-bottom:8px;color:#fff;}
+#answers{display:flex;gap:10px;justify-content:center;}
+.ab{padding:9px 22px;background:#1a4a1a;border:2px solid #4ec94e;color:#fff;font-family:'Courier New',monospace;font-size:17px;cursor:pointer;transition:all .1s;}
+.ab:hover{background:#4ec94e;color:#0d2a0d;transform:scale(1.07);}
+.ab.ok{background:#27ae60;border-color:#2ecc71;}
+.ab.ko{background:#c0392b;border-color:#e74c3c;}
+#msg{font-size:13px;min-height:16px;color:#ffe066;margin-bottom:6px;}
+#overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,20,0,.93);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:10;padding:14px;overflow-y:auto;}
+#overlay h1{font-size:22px;color:#ffe066;text-shadow:2px 2px #27ae60;text-align:center;line-height:1.4;}
+.sub{color:#aed6ae;font-size:12px;text-align:center;max-width:360px;line-height:1.7;}
+.bigbtn{padding:10px 28px;background:#27ae60;border:none;color:#fff;font-family:'Courier New',monospace;font-size:16px;cursor:pointer;letter-spacing:2px;}
+.bigbtn:hover{background:#ffe066;color:#0d2a0d;}
+.panel{width:100%;max-width:360px;background:#0a1f0a;border:2px solid #4ec94e;padding:8px 12px;}
+.panel h2{font-size:12px;color:#ffe066;text-align:center;margin-bottom:6px;letter-spacing:2px;}
+.row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:3px 6px;}
+.row.gold{color:#ffe066;background:#1a2a0a;}
+.row.silver{color:#bdc3c7;background:#141e14;}
+.row.bronze{color:#ca6f1e;background:#1a150a;}
+.row.normal{color:#aaa;}
+.empty{font-size:12px;color:#555;text-align:center;padding:6px;}
+#score-entry{display:flex;flex-direction:column;align-items:center;gap:7px;background:#0d2a0d;border:2px solid #4ec94e;padding:12px 18px;width:100%;max-width:360px;}
+#score-entry .result{font-size:16px;color:#fff;}
+#score-entry p{font-size:12px;color:#ffe066;}
+#name-row{display:flex;gap:8px;}
+#name-input{background:#1a4a1a;border:2px solid #4ec94e;color:#fff;font-family:'Courier New',monospace;font-size:15px;padding:6px 10px;width:155px;outline:none;}
+#name-input:focus{border-color:#ffe066;}
+#save-btn{padding:6px 12px;background:#27ae60;border:2px solid #2ecc71;color:#fff;font-family:'Courier New',monospace;font-size:14px;cursor:pointer;}
+</style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="fr"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1">&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1">&lt;title&gt;Defend the Castle&lt;/title&gt;</p>
-<p class="p1">&lt;style&gt;</p>
-<p class="p1">*{margin:0;padding:0;box-sizing:border-box;}</p>
-<p class="p1">body{background:#0d2a0d;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:'Courier New',monospace;color:#fff;overflow:hidden;}</p>
-<p class="p1">#wrap{position:relative;width:560px;}</p>
-<p class="p1">canvas{display:block;border:3px solid #4ec94e;width:560px;height:200px;image-rendering:pixelated;}</p>
-<p class="p1">#hud{display:flex;justify-content:space-between;padding:5px 12px;background:#0d2a0d;border:2px solid #4ec94e;border-bottom:none;font-size:13px;}</p>
-<p class="p1">#hud span{color:#ffe066;font-weight:bold;}</p>
-<p class="p1">#qzone{background:#0d2a0d;border:2px solid #4ec94e;border-top:none;padding:10px 14px;text-align:center;}</p>
-<p class="p1">#question{font-size:26px;letter-spacing:3px;margin-bottom:8px;color:#fff;}</p>
-<p class="p1">#answers{display:flex;gap:10px;justify-content:center;}</p>
-<p class="p1">.ab{padding:9px 22px;background:#1a4a1a;border:2px solid #4ec94e;color:#fff;font-family:'Courier New',monospace;font-size:17px;cursor:pointer;transition:all .1s;}</p>
-<p class="p1">.ab:hover{background:#4ec94e;color:#0d2a0d;transform:scale(1.07);}</p>
-<p class="p1">.ab.ok{background:#27ae60;border-color:#2ecc71;}</p>
-<p class="p1">.ab.ko{background:#c0392b;border-color:#e74c3c;}</p>
-<p class="p1">#msg{font-size:13px;min-height:16px;color:#ffe066;margin-bottom:6px;}</p>
-<p class="p1">#overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,20,0,.93);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:10;padding:14px;overflow-y:auto;}</p>
-<p class="p1">#overlay h1{font-size:22px;color:#ffe066;text-shadow:2px 2px #27ae60;text-align:center;line-height:1.4;}</p>
-<p class="p1">.sub{color:#aed6ae;font-size:12px;text-align:center;max-width:360px;line-height:1.7;}</p>
-<p class="p1">.bigbtn{padding:10px 28px;background:#27ae60;border:none;color:#fff;font-family:'Courier New',monospace;font-size:16px;cursor:pointer;letter-spacing:2px;}</p>
-<p class="p1">.bigbtn:hover{background:#ffe066;color:#0d2a0d;}</p>
-<p class="p1">.panel{width:100%;max-width:360px;background:#0a1f0a;border:2px solid #4ec94e;padding:8px 12px;}</p>
-<p class="p1">.panel h2{font-size:12px;color:#ffe066;text-align:center;margin-bottom:6px;letter-spacing:2px;}</p>
-<p class="p1">.row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:3px 6px;}</p>
-<p class="p1">.row.gold{color:#ffe066;background:#1a2a0a;}</p>
-<p class="p1">.row.silver{color:#bdc3c7;background:#141e14;}</p>
-<p class="p1">.row.bronze{color:#ca6f1e;background:#1a150a;}</p>
-<p class="p1">.row.normal{color:#aaa;}</p>
-<p class="p1">.empty{font-size:12px;color:#555;text-align:center;padding:6px;}</p>
-<p class="p1">#score-entry{display:flex;flex-direction:column;align-items:center;gap:7px;background:#0d2a0d;border:2px solid #4ec94e;padding:12px 18px;width:100%;max-width:360px;}</p>
-<p class="p1">#score-entry .result{font-size:16px;color:#fff;}</p>
-<p class="p1">#score-entry p{font-size:12px;color:#ffe066;}</p>
-<p class="p1">#name-row{display:flex;gap:8px;}</p>
-<p class="p1">#name-input{background:#1a4a1a;border:2px solid #4ec94e;color:#fff;font-family:'Courier New',monospace;font-size:15px;padding:6px 10px;width:155px;outline:none;}</p>
-<p class="p1">#name-input:focus{border-color:#ffe066;}</p>
-<p class="p1">#save-btn{padding:6px 12px;background:#27ae60;border:2px solid #2ecc71;color:#fff;font-family:'Courier New',monospace;font-size:14px;cursor:pointer;}</p>
-<p class="p1">&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1">&lt;div id="wrap"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="hud"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;&lt;span id="lives"&gt;❤️❤️❤️❤️&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;⏱️ &lt;span id="timer"&gt;0s&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div style="color:#aed6ae;font-size:12px"&gt;🏆 &lt;span id="best-display"&gt;—&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;👾 &lt;span id="killed"&gt;0&lt;/span&gt; éliminés&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;canvas id="c" width="560" height="240"&gt;&lt;/canvas&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="qzone"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="msg"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="question"&gt;? × ? = ?&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="answers"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p1">&lt;div id="overlay"&gt;&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;script&gt;</p>
-<p class="p1">var AC = new (window.AudioContext || window.webkitAudioContext)();</p>
-<p class="p1">function beep(f,d,t,v){t=t||'square';v=v||0.15;var o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,AC.currentTime);g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+d);o.start();o.stop(AC.currentTime+d);}</p>
-<p class="p1">function sfxOk(){beep(600,.07);setTimeout(function(){beep(900,.1);},70);}</p>
-<p class="p1">function sfxBad(){beep(220,.2,'sawtooth',.15);}</p>
-<p class="p1">function sfxHit(){beep(100,.3,'sawtooth',.2);}</p>
-<p class="p1">function sfxDie(){var ff=[200,160,120,80];for(var i=0;i&lt;ff.length;i++){(function(f,d){setTimeout(function(){beep(f,.2,'sawtooth',.2);},d);})(ff[i],i*80);}}</p>
-<p class="p2"><br></p>
-<p class="p1">var cv=document.getElementById('c'), ctx=cv.getContext('2d');</p>
-<p class="p1">var W=560, H=200, GROUND_Y=155, HERO_X=118, CASTLE_RIGHT=105, ENEMY_START=545;</p>
-<p class="p2"><br></p>
-<p class="p1">var PALETTES=[</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{body:'#e74c3c',eye:'#f9e79f',wpn:'#7d6608'},</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{body:'#27ae60',eye:'#f9e79f',wpn:'#6d4c41'},</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{body:'#e67e22',eye:'#f9e79f',wpn:'#4a235a'},</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{body:'#8e44ad',eye:'#f9e79f',wpn:'#7d6608'},</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{body:'#2980b9',eye:'#f9e79f',wpn:'#7d6608'},</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{body:'#f39c12',eye:'#fff',wpn:'#922b21'}</p>
-<p class="p1">];</p>
-<p class="p2"><br></p>
-<p class="p1">var enemies, particles, shakeT;</p>
-<p class="p1">var lives, killed, survivalSecs;</p>
-<p class="p1">var gameState, locked, currentQ;</p>
-<p class="p1">var raf, timerInt, spawnTO;</p>
-<p class="p1">var scores=[], errorMap={};</p>
-<p class="p2"><br></p>
-<p class="p1">function currentSpeed(){return Math.min(0.35+survivalSecs*0.007,1.2);}</p>
-<p class="p1">function spawnInterval(){return Math.max(1200,3500-survivalSecs*25);}</p>
-<p class="p2"><br></p>
-<p class="p1">function scheduleSpawn(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(gameState!=='playing')return;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>spawnTO=setTimeout(function(){spawnEnemy();scheduleSpawn();},spawnInterval());</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function spawnEnemy(forceX){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var pal=PALETTES[Math.floor(Math.random()*PALETTES.length)];</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var rightmost=HERO_X;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(var i=0;i&lt;enemies.length;i++){if(enemies[i].alive&amp;&amp;enemies[i].x&gt;rightmost)rightmost=enemies[i].x;}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var x=(forceX!==undefined)?forceX:Math.max(ENEMY_START,rightmost+130);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>enemies.push({x:x,y:GROUND_Y-24,speed:currentSpeed(),hp:1,flashT:0,alive:true,pal:pal});</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function px(x,y,c,s){s=s||3;ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),s,s);}</p>
-<p class="p2"><br></p>
-<p class="p1">// ── Background ─────────────────────────────────────</p>
-<p class="p1">function drawSun(x,y,r){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.strokeStyle='#ffe066';ctx.lineWidth=3;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(var i=0;i&lt;12;i++){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>var a=(i/12)*Math.PI*2;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.beginPath();ctx.moveTo(x+Math.cos(a)*(r+4),y+Math.sin(a)*(r+4));ctx.lineTo(x+Math.cos(a)*(r+14),y+Math.sin(a)*(r+14));ctx.stroke();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var sg=ctx.createRadialGradient(x-r*0.2,y-r*0.2,r*0.1,x,y,r);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>sg.addColorStop(0,'#fff7a0');sg.addColorStop(0.5,'#ffd700');sg.addColorStop(1,'#ffaa00');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle=sg;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle='#c8860a';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.beginPath();ctx.arc(x-r*0.28,y-r*0.15,r*0.1,0,Math.PI*2);ctx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.beginPath();ctx.arc(x+r*0.28,y-r*0.15,r*0.1,0,Math.PI*2);ctx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.strokeStyle='#c8860a';ctx.lineWidth=2;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.beginPath();ctx.arc(x,y+r*0.05,r*0.3,0.15,Math.PI-0.15);ctx.stroke();</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function drawCloud(cx,cy,r){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle='rgba(255,255,255,0.9)';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.beginPath();ctx.arc(cx+r*1.1,cy+r*0.2,r*0.75,0,Math.PI*2);ctx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.beginPath();ctx.arc(cx-r*1.0,cy+r*0.25,r*0.65,0,Math.PI*2);ctx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.beginPath();ctx.arc(cx+r*0.4,cy-r*0.55,r*0.6,0,Math.PI*2);ctx.fill();</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function drawPalmTree(x,groundY,h,leafR,alpha){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>alpha=alpha||1;ctx.globalAlpha=alpha;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.strokeStyle='#7d5a2f';ctx.lineWidth=6;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.beginPath();ctx.moveTo(x,groundY);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.bezierCurveTo(x+10,groundY-h*0.4,x-12,groundY-h*0.7,x+5,groundY-h);ctx.stroke();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var tx=x+5,ty=groundY-h;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var angles=[-0.9,-0.5,0,0.4,0.8,1.3,-1.4];</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(var i=0;i&lt;angles.length;i++){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>var a=angles[i];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.strokeStyle='#2d8a2d';ctx.lineWidth=4;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.beginPath();ctx.moveTo(tx,ty);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.quadraticCurveTo(tx+Math.cos(a)*leafR*0.6,ty+Math.sin(a)*leafR*0.6,tx+Math.cos(a)*leafR,ty+Math.sin(a)*leafR);ctx.stroke();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.strokeStyle='#3ab83a';ctx.lineWidth=2;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.beginPath();ctx.moveTo(tx,ty);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.quadraticCurveTo(tx+Math.cos(a+0.15)*leafR*0.5,ty+Math.sin(a+0.15)*leafR*0.5,tx+Math.cos(a)*leafR,ty+Math.sin(a)*leafR);ctx.stroke();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.globalAlpha=1;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function drawBush(x,y){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle='#2d7a2d';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.beginPath();ctx.arc(x,y,14,0,Math.PI*2);ctx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.beginPath();ctx.arc(x+16,y+4,11,0,Math.PI*2);ctx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.beginPath();ctx.arc(x-14,y+5,10,0,Math.PI*2);ctx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle='#3ab83a';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.beginPath();ctx.arc(x+2,y-4,9,0,Math.PI*2);ctx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.beginPath();ctx.arc(x+14,y,7,0,Math.PI*2);ctx.fill();</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function drawFern(x,y){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.strokeStyle='#27ae60';ctx.lineWidth=2;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(var i=-2;i&lt;=2;i++){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>var a=-Math.PI/2+i*0.35;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.beginPath();ctx.moveTo(x,y);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.quadraticCurveTo(x+Math.cos(a)*14,y+Math.sin(a)*14,x+Math.cos(a)*22,y+Math.sin(a)*22);ctx.stroke();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function drawBG(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Ciel</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var g=ctx.createLinearGradient(0,0,0,H);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>g.addColorStop(0,'#87ceeb');g.addColorStop(1,'#c8eec8');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle=g;ctx.fillRect(0,0,W,H);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Soleil</p>
-<p class="p1"><span class="Apple-converted-space">  </span>drawSun(460,50,32);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Nuages</p>
-<p class="p1"><span class="Apple-converted-space">  </span>drawCloud(75,33,17);drawCloud(225,22,21);drawCloud(345,40,15);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Palmiers arrière</p>
-<p class="p1"><span class="Apple-converted-space">  </span>drawPalmTree(170,GROUND_Y,85,30,0.45);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>drawPalmTree(300,GROUND_Y,75,26,0.45);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>drawPalmTree(420,GROUND_Y,90,32,0.45);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Sol</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle='#3a9e3a';ctx.fillRect(0,GROUND_Y,W,H-GROUND_Y);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle='#4ec94e';ctx.fillRect(0,GROUND_Y,W,5);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Chemin</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle='#7d5a2f';ctx.fillRect(CASTLE_RIGHT,GROUND_Y+2,W-CASTLE_RIGHT,8);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle='#a0753a';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(var i=CASTLE_RIGHT;i&lt;W;i+=32)ctx.fillRect(i,GROUND_Y+3,18,4);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Palmiers avant</p>
-<p class="p1"><span class="Apple-converted-space">  </span>drawPalmTree(140,GROUND_Y,70,28);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>drawPalmTree(390,GROUND_Y+2,68,26);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>drawPalmTree(510,GROUND_Y,78,30);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Buissons &amp; fougères</p>
-<p class="p1"><span class="Apple-converted-space">  </span>drawBush(160,GROUND_Y-10);drawBush(320,GROUND_Y-10);drawBush(480,GROUND_Y-10);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>drawFern(200,GROUND_Y+2);drawFern(360,GROUND_Y+2);drawFern(520,GROUND_Y+2);</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">// ── Castle ─────────────────────────────────────────</p>
-<p class="p1">function drawCastle(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var s=4,bx=4,by=GROUND_Y-20*4; // base du château = GROUND_Y</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var wall='#8d9db6',dk='#5d6d7e',win='#5dade2',wdk='#1a5276',gate='#2c3e50',torch='#f5a623';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var r,c;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(r=0;r&lt;20;r++)for(c=0;c&lt;5;c++)px(bx+c*s,by+r*s,r%3?wall:dk,s);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>[[0,0],[2,0],[4,0]].forEach(function(d){px(bx+d[0]*s,by-s,wall,s);});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>px(bx+1*s,by+4*s,win,s);px(bx+2*s,by+4*s,wdk,s);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(r=3;r&lt;20;r++)for(c=4;c&lt;16;c++)px(bx+c*s,by+r*s,r%3?wall:dk,s);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>[[4,2],[6,2],[8,2],[10,2],[12,2],[14,2]].forEach(function(d){px(bx+d[0]*s,by+d[1]*s,wall,s);});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(r=6;r&lt;9;r++)for(c=7;c&lt;11;c++)px(bx+c*s,by+r*s,(c===8||c===9)?win:wdk,s);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle='#e94560';ctx.fillRect(bx+9*s,by,2,18);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle='#fff';ctx.fillRect(bx+9*s+2,by,12,9);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(r=14;r&lt;20;r++)for(c=8;c&lt;12;c++)px(bx+c*s,by+r*s,gate,s);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>px(bx+8*s,by+13*s,gate,s);px(bx+11*s,by+13*s,gate,s);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>px(bx+6*s,by+11*s,torch,s);px(bx+13*s,by+11*s,torch,s);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(r=0;r&lt;20;r++)for(c=15;c&lt;20;c++)px(bx+c*s,by+r*s,r%3?wall:dk,s);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>[[15,0],[17,0],[19,0]].forEach(function(d){px(bx+d[0]*s,by-s,wall,s);});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>px(bx+16*s,by+4*s,win,s);px(bx+17*s,by+4*s,wdk,s);</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function drawHero(x){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var s=4, oy=GROUND_Y-7*s; // pieds posés exactement sur GROUND_Y</p>
-<p class="p1"><span class="Apple-converted-space">  </span>[[1,0],[2,0],[3,0],[0,1],[1,1],[2,1],[3,1]].forEach(function(d){px(x+d[0]*s,oy+d[1]*s,'#5dade2',s);});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>px(x+1*s,oy+2*s,'#1a1a2e',s);px(x+2*s,oy+2*s,'#1a1a2e',s);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>[[0,3],[1,3],[2,3],[3,3],[0,4],[1,4],[2,4],[3,4]].forEach(function(d){px(x+d[0]*s,oy+d[1]*s,'#2980b9',s);});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>px(x+1*s,oy+3*s,'#f5a623',s);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>px(x+4*s,oy+1*s,'#f5a623',s);px(x+4*s,oy+2*s,'#bdc3c7',s);px(x+4*s,oy+3*s,'#bdc3c7',s);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>[[0,5],[1,5],[2,5],[3,5],[0,6],[3,6]].forEach(function(d){px(x+d[0]*s,oy+d[1]*s,'#1a5276',s);});</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function drawGoblin(e){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(!e.alive)return;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var s=4, ox=e.x, oy=GROUND_Y-7*s, p=e.pal;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var col=e.flashT&gt;0?'#fff':p.body;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>[[1,0],[2,0],[1,1],[2,1],[0,2],[1,2],[2,2],[3,2],[1,3],[2,3],[1,4],[2,4],[0,5],[3,5]].forEach(function(d){px(ox+d[0]*s,oy+d[1]*s,col,s);});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>px(ox+1*s,oy+1*s,p.eye,s);px(ox+0*s,oy+3*s,p.wpn,s);px(ox+3*s,oy+3*s,p.wpn,s);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(e.flashT&gt;0)e.flashT--;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function spawnFx(x,y,c,n,big){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>n=n||12;big=big||false;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(var i=0;i&lt;n;i++){particles.push({x:x,y:y,vx:(Math.random()-.5)*5,vy:(Math.random()-1.8)*4,l:22,ml:22,c:c,s:big?5:3});}</p>
-<p class="p1">}</p>
-<p class="p1">function drawParticles(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var alive=[];</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(var i=0;i&lt;particles.length;i++){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>var p=particles[i];if(p.l&lt;=0)continue;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.globalAlpha=p.l/p.ml;ctx.fillStyle=p.c;ctx.fillRect(p.x,p.y,p.s,p.s);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>p.x+=p.vx;p.y+=p.vy;p.l--;alive.push(p);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.globalAlpha=1;particles=alive;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function updateHUD(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('lives').textContent='❤️'.repeat(lives)+'🖤'.repeat(4-lives);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('killed').textContent=killed;</p>
-<p class="p1">}</p>
-<p class="p1">function closestEnemy(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var best=null;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(var i=0;i&lt;enemies.length;i++){if(enemies[i].alive&amp;&amp;(!best||enemies[i].x&lt;best.x))best=enemies[i];}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return best;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function render(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var dx=0,dy=0;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(shakeT&gt;0){dx=(Math.random()-.5)*7;dy=(Math.random()-.5)*5;shakeT--;}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.save();ctx.translate(dx,dy);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>drawBG();drawCastle();drawParticles();drawHero(HERO_X);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(var i=0;i&lt;enemies.length;i++)drawGoblin(enemies[i]);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(gameState==='playing'){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>for(var i=0;i&lt;enemies.length;i++){if(enemies[i].alive)enemies[i].x-=enemies[i].speed;}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>for(var i=enemies.length-1;i&gt;=0;i--){</p>
-<p class="p1"><span class="Apple-converted-space">      </span>var e=enemies[i];</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if(e.alive&amp;&amp;e.x&lt;=HERO_X+12){</p>
-<p class="p1"><span class="Apple-converted-space">        </span>e.alive=false;lives--;shakeT=12;sfxHit();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>spawnFx(HERO_X+20,GROUND_Y-20,'#e74c3c',16,true);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>updateHUD();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if(lives&lt;=0){ctx.restore();endGame();return;}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>var alive=[];for(var i=0;i&lt;enemies.length;i++){if(enemies[i].alive||enemies[i].flashT&gt;0)alive.push(enemies[i]);}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>enemies=alive;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.restore();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(gameState==='playing')raf=requestAnimationFrame(render);</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function genOpts(correct){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var opts=[correct],tries=0;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>while(opts.length&lt;4&amp;&amp;tries&lt;100){tries++;var v=correct+Math.floor(Math.random()*14)-7;if(v&gt;0&amp;&amp;opts.indexOf(v)===-1)opts.push(v);}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>opts.sort(function(){return Math.random()-.5;});return opts;</p>
-<p class="p1">}</p>
-<p class="p1">function renderAnswerBtns(opts){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var div=document.getElementById('answers');div.innerHTML='';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(var i=0;i&lt;opts.length;i++){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>(function(opt){var btn=document.createElement('button');btn.className='ab';btn.textContent=opt;btn.onclick=function(){answer(opt,btn);};div.appendChild(btn);})(opts[i]);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1">}</p>
-<p class="p1">function showQ(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>locked=false;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var tables=[2,3,4,5,6,7,8,9];</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var a=tables[Math.floor(Math.random()*tables.length)];</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var b=2+Math.floor(Math.random()*9);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>currentQ={a:a,b:b,correct:a*b};</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('question').textContent=a+' × '+b+' = ?';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('msg').textContent='';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>renderAnswerBtns(genOpts(currentQ.correct));</p>
-<p class="p1">}</p>
-<p class="p1">function retryQ(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>locked=false;document.getElementById('msg').textContent='';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>renderAnswerBtns(genOpts(currentQ.correct));</p>
-<p class="p1">}</p>
-<p class="p1">function answer(val,btn){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(locked)return;locked=true;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var btns=document.querySelectorAll('.ab');for(var i=0;i&lt;btns.length;i++)btns[i].onclick=null;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(val===currentQ.correct){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>btn.classList.add('ok');sfxOk();document.getElementById('msg').textContent='✅ Bien joué !';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>var t=closestEnemy();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if(t){t.hp--;t.flashT=8;spawnFx(t.x+10,t.y+10,'#f5a623',10);if(t.hp&lt;=0){t.alive=false;killed++;spawnFx(t.x+10,t.y+10,t.pal.body,20,true);updateHUD();}}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if(gameState==='playing')setTimeout(showQ,300);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>btn.classList.add('ko');sfxBad();document.getElementById('msg').textContent='❌ Raté ! Réessaie…';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>var key=currentQ.a+'x'+currentQ.b;errorMap[key]=(errorMap[key]||0)+1;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if(gameState==='playing')setTimeout(retryQ,800);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function addScore(name,secs,kld){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>scores.push({name:name||'Anonyme',secs:secs,killed:kld});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>scores.sort(function(a,b){return b.secs-a.secs||b.killed-a.killed;});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(scores.length&gt;10)scores=scores.slice(0,10);</p>
-<p class="p1">}</p>
-<p class="p1">function renderLB(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(scores.length===0)return '&lt;div class="empty"&gt;Aucun score encore&lt;/div&gt;';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var medals=['🥇','🥈','🥉'],cls=['gold','silver','bronze'],html='';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(var i=0;i&lt;scores.length;i++){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>var s=scores[i],c=cls[i]||'normal',m=medals[i]||('#'+(i+1));</p>
-<p class="p1"><span class="Apple-converted-space">    </span>html+='&lt;div class="row '+c+'"&gt;&lt;span style="width:24px"&gt;'+m+'&lt;/span&gt;&lt;span style="flex:1;padding:0 6px"&gt;'+s.name+'&lt;/span&gt;&lt;span style="color:#fff;font-weight:bold"&gt;'+s.secs+'s&lt;/span&gt;&lt;span style="color:#888;margin-left:8px"&gt;'+s.killed+'👾&lt;/span&gt;&lt;/div&gt;';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return html;</p>
-<p class="p1">}</p>
-<p class="p1">function renderMistakes(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var entries=[],k;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(k in errorMap){if(errorMap.hasOwnProperty(k))entries.push({key:k,count:errorMap[k]});}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(entries.length===0)return '&lt;div class="empty"&gt;✅ Aucune erreur — parfait !&lt;/div&gt;';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>entries.sort(function(a,b){return b.count-a.count;});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var top=entries.slice(0,3),medals=['🥇','🥈','🥉'],cls=['gold','silver','bronze'],html='';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(var i=0;i&lt;top.length;i++){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>var parts=top[i].key.split('x'),a=parseInt(parts[0],10),b=parseInt(parts[1],10);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>html+='&lt;div class="row '+cls[i]+'"&gt;&lt;span&gt;'+medals[i]+' &lt;b&gt;'+a+' × '+b+' = '+(a*b)+'&lt;/b&gt;&lt;/span&gt;&lt;span style="color:#e94560"&gt;'+top[i].count+' erreur'+(top[i].count&gt;1?'s':'')+'&lt;/span&gt;&lt;/div&gt;';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return html;</p>
-<p class="p1">}</p>
-<p class="p1">function updateBestHUD(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('best-display').textContent=scores.length?scores[0].name+' – '+scores[0].secs+'s':'—';</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function showMainMenu(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var ov=document.getElementById('overlay');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ov.innerHTML='&lt;h1&gt;🏰 DEFEND&lt;br&gt;THE CASTLE 🏰&lt;/h1&gt;'+</p>
-<p class="p1"><span class="Apple-converted-space">    </span>'&lt;p class="sub"&gt;Les ennemis arrivent par la droite.&lt;br&gt;Réponds aux multiplications pour les éliminer.&lt;br&gt;4 ennemis passés = Game Over.&lt;/p&gt;'+</p>
-<p class="p1"><span class="Apple-converted-space">    </span>'&lt;button class="bigbtn" onclick="startGame()"&gt;▶ JOUER&lt;/button&gt;'+</p>
-<p class="p1"><span class="Apple-converted-space">    </span>'&lt;div class="panel"&gt;&lt;h2&gt;🏆 MEILLEURS SCORES&lt;/h2&gt;'+renderLB()+'&lt;/div&gt;';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ov.style.display='flex';</p>
-<p class="p1">}</p>
-<p class="p1">function showGameOver(secs,kld){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var isNew=scores.length===0||secs&gt;scores[0].secs;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var ov=document.getElementById('overlay');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ov.innerHTML='&lt;h1&gt;💀 CHÂTEAU DÉTRUIT !&lt;/h1&gt;'+</p>
-<p class="p1"><span class="Apple-converted-space">    </span>'&lt;div id="score-entry"&gt;'+</p>
-<p class="p1"><span class="Apple-converted-space">      </span>'&lt;div class="result"&gt;'+(isNew?'🎉 Nouveau record ! ':'')+' ⏱️ '+secs+'s — 👾 '+kld+' éliminé'+(kld&gt;1?'s':'')+'&lt;/div&gt;'+</p>
-<p class="p1"><span class="Apple-converted-space">      </span>'&lt;p&gt;Entre ton prénom :&lt;/p&gt;'+</p>
-<p class="p1"><span class="Apple-converted-space">      </span>'&lt;div id="name-row"&gt;&lt;input id="name-input" type="text" maxlength="12" placeholder="Ton prénom..."/&gt;&lt;button id="save-btn" onclick="saveScore('+secs+','+kld+')"&gt;✔ OK&lt;/button&gt;&lt;/div&gt;'+</p>
-<p class="p1"><span class="Apple-converted-space">    </span>'&lt;/div&gt;'+</p>
-<p class="p1"><span class="Apple-converted-space">    </span>'&lt;div class="panel"&gt;&lt;h2&gt;📚 À RÉVISER&lt;/h2&gt;&lt;div id="mistakes-inner"&gt;'+renderMistakes()+'&lt;/div&gt;&lt;/div&gt;'+</p>
-<p class="p1"><span class="Apple-converted-space">    </span>'&lt;div class="panel"&gt;&lt;h2&gt;🏆 MEILLEURS SCORES&lt;/h2&gt;&lt;div id="lb-inner"&gt;'+renderLB()+'&lt;/div&gt;&lt;/div&gt;'+</p>
-<p class="p1"><span class="Apple-converted-space">    </span>'&lt;button class="bigbtn" onclick="startGame()"&gt;↺ Rejouer&lt;/button&gt;';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ov.style.display='flex';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>setTimeout(function(){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>var inp=document.getElementById('name-input');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if(inp){inp.focus();inp.addEventListener('keydown',function(e){if(e.key==='Enter')saveScore(secs,kld);});}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>},100);</p>
-<p class="p1">}</p>
-<p class="p1">function saveScore(secs,kld){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var inp=document.getElementById('name-input');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var name=(inp&amp;&amp;inp.value.trim())?inp.value.trim():'Anonyme';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>addScore(name,secs,kld);updateBestHUD();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var entry=document.getElementById('score-entry');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(entry)entry.innerHTML='&lt;div class="result" style="color:#4ec94e"&gt;✅ Sauvegardé pour &lt;b&gt;'+name+'&lt;/b&gt; !&lt;/div&gt;';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>var lb=document.getElementById('lb-inner');if(lb)lb.innerHTML=renderLB();</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function startGame(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(AC.state==='suspended')AC.resume();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('overlay').style.display='none';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>enemies=[];particles=[];shakeT=0;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>lives=4;killed=0;survivalSecs=0;errorMap={};</p>
-<p class="p1"><span class="Apple-converted-space">  </span>gameState='playing';locked=false;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>updateHUD();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('timer').textContent='0s';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>clearTimeout(spawnTO);clearInterval(timerInt);cancelAnimationFrame(raf);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>spawnEnemy(300);scheduleSpawn();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>timerInt=setInterval(function(){if(gameState!=='playing')return;survivalSecs++;document.getElementById('timer').textContent=survivalSecs+'s';},1000);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>render();showQ();</p>
-<p class="p1">}</p>
-<p class="p1">function endGame(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>gameState='over';clearTimeout(spawnTO);clearInterval(timerInt);cancelAnimationFrame(raf);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>sfxDie();showGameOver(survivalSecs,killed);</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">drawBG();drawCastle();drawHero(HERO_X);</p>
-<p class="p1">showMainMenu();</p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+<div id="wrap">
+  <div id="hud">
+    <div><span id="lives">❤️❤️❤️❤️</span></div>
+    <div>⏱️ <span id="timer">0s</span></div>
+    <div style="color:#aed6ae;font-size:12px">🏆 <span id="best-display">—</span></div>
+    <div>👾 <span id="killed">0</span> éliminés</div>
+  </div>
+  <canvas id="c" width="560" height="240"></canvas>
+  <div id="qzone">
+    <div id="msg"></div>
+    <div id="question">? × ? = ?</div>
+    <div id="answers"></div>
+  </div>
+</div>
+<div id="overlay"></div>
+
+<script>
+var AC = new (window.AudioContext || window.webkitAudioContext)();
+function beep(f,d,t,v){t=t||'square';v=v||0.15;var o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,AC.currentTime);g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+d);o.start();o.stop(AC.currentTime+d);}
+function sfxOk(){beep(600,.07);setTimeout(function(){beep(900,.1);},70);}
+function sfxBad(){beep(220,.2,'sawtooth',.15);}
+function sfxHit(){beep(100,.3,'sawtooth',.2);}
+function sfxDie(){var ff=[200,160,120,80];for(var i=0;i<ff.length;i++){(function(f,d){setTimeout(function(){beep(f,.2,'sawtooth',.2);},d);})(ff[i],i*80);}}
+
+var cv=document.getElementById('c'), ctx=cv.getContext('2d');
+var W=560, H=200, GROUND_Y=155, HERO_X=118, CASTLE_RIGHT=105, ENEMY_START=545;
+
+var PALETTES=[
+  {body:'#e74c3c',eye:'#f9e79f',wpn:'#7d6608'},
+  {body:'#27ae60',eye:'#f9e79f',wpn:'#6d4c41'},
+  {body:'#e67e22',eye:'#f9e79f',wpn:'#4a235a'},
+  {body:'#8e44ad',eye:'#f9e79f',wpn:'#7d6608'},
+  {body:'#2980b9',eye:'#f9e79f',wpn:'#7d6608'},
+  {body:'#f39c12',eye:'#fff',wpn:'#922b21'}
+];
+
+var enemies, particles, shakeT;
+var lives, killed, survivalSecs;
+var gameState, locked, currentQ;
+var raf, timerInt, spawnTO;
+var scores=[], errorMap={};
+
+function currentSpeed(){return Math.min(0.35+survivalSecs*0.007,1.2);}
+function spawnInterval(){return Math.max(1200,3500-survivalSecs*25);}
+
+function scheduleSpawn(){
+  if(gameState!=='playing')return;
+  spawnTO=setTimeout(function(){spawnEnemy();scheduleSpawn();},spawnInterval());
+}
+
+function spawnEnemy(forceX){
+  var pal=PALETTES[Math.floor(Math.random()*PALETTES.length)];
+  var rightmost=HERO_X;
+  for(var i=0;i<enemies.length;i++){if(enemies[i].alive&&enemies[i].x>rightmost)rightmost=enemies[i].x;}
+  var x=(forceX!==undefined)?forceX:Math.max(ENEMY_START,rightmost+130);
+  enemies.push({x:x,y:GROUND_Y-24,speed:currentSpeed(),hp:1,flashT:0,alive:true,pal:pal});
+}
+
+function px(x,y,c,s){s=s||3;ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),s,s);}
+
+// ── Background ─────────────────────────────────────
+function drawSun(x,y,r){
+  ctx.strokeStyle='#ffe066';ctx.lineWidth=3;
+  for(var i=0;i<12;i++){
+    var a=(i/12)*Math.PI*2;
+    ctx.beginPath();ctx.moveTo(x+Math.cos(a)*(r+4),y+Math.sin(a)*(r+4));ctx.lineTo(x+Math.cos(a)*(r+14),y+Math.sin(a)*(r+14));ctx.stroke();
+  }
+  var sg=ctx.createRadialGradient(x-r*0.2,y-r*0.2,r*0.1,x,y,r);
+  sg.addColorStop(0,'#fff7a0');sg.addColorStop(0.5,'#ffd700');sg.addColorStop(1,'#ffaa00');
+  ctx.fillStyle=sg;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#c8860a';
+  ctx.beginPath();ctx.arc(x-r*0.28,y-r*0.15,r*0.1,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(x+r*0.28,y-r*0.15,r*0.1,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#c8860a';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(x,y+r*0.05,r*0.3,0.15,Math.PI-0.15);ctx.stroke();
+}
+
+function drawCloud(cx,cy,r){
+  ctx.fillStyle='rgba(255,255,255,0.9)';
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(cx+r*1.1,cy+r*0.2,r*0.75,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(cx-r*1.0,cy+r*0.25,r*0.65,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(cx+r*0.4,cy-r*0.55,r*0.6,0,Math.PI*2);ctx.fill();
+}
+
+function drawPalmTree(x,groundY,h,leafR,alpha){
+  alpha=alpha||1;ctx.globalAlpha=alpha;
+  ctx.strokeStyle='#7d5a2f';ctx.lineWidth=6;
+  ctx.beginPath();ctx.moveTo(x,groundY);
+  ctx.bezierCurveTo(x+10,groundY-h*0.4,x-12,groundY-h*0.7,x+5,groundY-h);ctx.stroke();
+  var tx=x+5,ty=groundY-h;
+  var angles=[-0.9,-0.5,0,0.4,0.8,1.3,-1.4];
+  for(var i=0;i<angles.length;i++){
+    var a=angles[i];
+    ctx.strokeStyle='#2d8a2d';ctx.lineWidth=4;
+    ctx.beginPath();ctx.moveTo(tx,ty);
+    ctx.quadraticCurveTo(tx+Math.cos(a)*leafR*0.6,ty+Math.sin(a)*leafR*0.6,tx+Math.cos(a)*leafR,ty+Math.sin(a)*leafR);ctx.stroke();
+    ctx.strokeStyle='#3ab83a';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(tx,ty);
+    ctx.quadraticCurveTo(tx+Math.cos(a+0.15)*leafR*0.5,ty+Math.sin(a+0.15)*leafR*0.5,tx+Math.cos(a)*leafR,ty+Math.sin(a)*leafR);ctx.stroke();
+  }
+  ctx.globalAlpha=1;
+}
+
+function drawBush(x,y){
+  ctx.fillStyle='#2d7a2d';
+  ctx.beginPath();ctx.arc(x,y,14,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(x+16,y+4,11,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(x-14,y+5,10,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#3ab83a';
+  ctx.beginPath();ctx.arc(x+2,y-4,9,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(x+14,y,7,0,Math.PI*2);ctx.fill();
+}
+
+function drawFern(x,y){
+  ctx.strokeStyle='#27ae60';ctx.lineWidth=2;
+  for(var i=-2;i<=2;i++){
+    var a=-Math.PI/2+i*0.35;
+    ctx.beginPath();ctx.moveTo(x,y);
+    ctx.quadraticCurveTo(x+Math.cos(a)*14,y+Math.sin(a)*14,x+Math.cos(a)*22,y+Math.sin(a)*22);ctx.stroke();
+  }
+}
+
+function drawBG(){
+  // Ciel
+  var g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#87ceeb');g.addColorStop(1,'#c8eec8');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  // Soleil
+  drawSun(460,50,32);
+  // Nuages
+  drawCloud(75,33,17);drawCloud(225,22,21);drawCloud(345,40,15);
+  // Palmiers arrière
+  drawPalmTree(170,GROUND_Y,85,30,0.45);
+  drawPalmTree(300,GROUND_Y,75,26,0.45);
+  drawPalmTree(420,GROUND_Y,90,32,0.45);
+  // Sol
+  ctx.fillStyle='#3a9e3a';ctx.fillRect(0,GROUND_Y,W,H-GROUND_Y);
+  ctx.fillStyle='#4ec94e';ctx.fillRect(0,GROUND_Y,W,5);
+  // Chemin
+  ctx.fillStyle='#7d5a2f';ctx.fillRect(CASTLE_RIGHT,GROUND_Y+2,W-CASTLE_RIGHT,8);
+  ctx.fillStyle='#a0753a';
+  for(var i=CASTLE_RIGHT;i<W;i+=32)ctx.fillRect(i,GROUND_Y+3,18,4);
+  // Palmiers avant
+  drawPalmTree(140,GROUND_Y,70,28);
+  drawPalmTree(390,GROUND_Y+2,68,26);
+  drawPalmTree(510,GROUND_Y,78,30);
+  // Buissons & fougères
+  drawBush(160,GROUND_Y-10);drawBush(320,GROUND_Y-10);drawBush(480,GROUND_Y-10);
+  drawFern(200,GROUND_Y+2);drawFern(360,GROUND_Y+2);drawFern(520,GROUND_Y+2);
+}
+
+// ── Castle ─────────────────────────────────────────
+function drawCastle(){
+  var s=4,bx=4,by=GROUND_Y-20*4; // base du château = GROUND_Y
+  var wall='#8d9db6',dk='#5d6d7e',win='#5dade2',wdk='#1a5276',gate='#2c3e50',torch='#f5a623';
+  var r,c;
+  for(r=0;r<20;r++)for(c=0;c<5;c++)px(bx+c*s,by+r*s,r%3?wall:dk,s);
+  [[0,0],[2,0],[4,0]].forEach(function(d){px(bx+d[0]*s,by-s,wall,s);});
+  px(bx+1*s,by+4*s,win,s);px(bx+2*s,by+4*s,wdk,s);
+  for(r=3;r<20;r++)for(c=4;c<16;c++)px(bx+c*s,by+r*s,r%3?wall:dk,s);
+  [[4,2],[6,2],[8,2],[10,2],[12,2],[14,2]].forEach(function(d){px(bx+d[0]*s,by+d[1]*s,wall,s);});
+  for(r=6;r<9;r++)for(c=7;c<11;c++)px(bx+c*s,by+r*s,(c===8||c===9)?win:wdk,s);
+  ctx.fillStyle='#e94560';ctx.fillRect(bx+9*s,by,2,18);
+  ctx.fillStyle='#fff';ctx.fillRect(bx+9*s+2,by,12,9);
+  for(r=14;r<20;r++)for(c=8;c<12;c++)px(bx+c*s,by+r*s,gate,s);
+  px(bx+8*s,by+13*s,gate,s);px(bx+11*s,by+13*s,gate,s);
+  px(bx+6*s,by+11*s,torch,s);px(bx+13*s,by+11*s,torch,s);
+  for(r=0;r<20;r++)for(c=15;c<20;c++)px(bx+c*s,by+r*s,r%3?wall:dk,s);
+  [[15,0],[17,0],[19,0]].forEach(function(d){px(bx+d[0]*s,by-s,wall,s);});
+  px(bx+16*s,by+4*s,win,s);px(bx+17*s,by+4*s,wdk,s);
+}
+
+function drawHero(x){
+  var s=4, oy=GROUND_Y-7*s; // pieds posés exactement sur GROUND_Y
+  [[1,0],[2,0],[3,0],[0,1],[1,1],[2,1],[3,1]].forEach(function(d){px(x+d[0]*s,oy+d[1]*s,'#5dade2',s);});
+  px(x+1*s,oy+2*s,'#1a1a2e',s);px(x+2*s,oy+2*s,'#1a1a2e',s);
+  [[0,3],[1,3],[2,3],[3,3],[0,4],[1,4],[2,4],[3,4]].forEach(function(d){px(x+d[0]*s,oy+d[1]*s,'#2980b9',s);});
+  px(x+1*s,oy+3*s,'#f5a623',s);
+  px(x+4*s,oy+1*s,'#f5a623',s);px(x+4*s,oy+2*s,'#bdc3c7',s);px(x+4*s,oy+3*s,'#bdc3c7',s);
+  [[0,5],[1,5],[2,5],[3,5],[0,6],[3,6]].forEach(function(d){px(x+d[0]*s,oy+d[1]*s,'#1a5276',s);});
+}
+
+function drawGoblin(e){
+  if(!e.alive)return;
+  var s=4, ox=e.x, oy=GROUND_Y-7*s, p=e.pal;
+  var col=e.flashT>0?'#fff':p.body;
+  [[1,0],[2,0],[1,1],[2,1],[0,2],[1,2],[2,2],[3,2],[1,3],[2,3],[1,4],[2,4],[0,5],[3,5]].forEach(function(d){px(ox+d[0]*s,oy+d[1]*s,col,s);});
+  px(ox+1*s,oy+1*s,p.eye,s);px(ox+0*s,oy+3*s,p.wpn,s);px(ox+3*s,oy+3*s,p.wpn,s);
+  if(e.flashT>0)e.flashT--;
+}
+
+function spawnFx(x,y,c,n,big){
+  n=n||12;big=big||false;
+  for(var i=0;i<n;i++){particles.push({x:x,y:y,vx:(Math.random()-.5)*5,vy:(Math.random()-1.8)*4,l:22,ml:22,c:c,s:big?5:3});}
+}
+function drawParticles(){
+  var alive=[];
+  for(var i=0;i<particles.length;i++){
+    var p=particles[i];if(p.l<=0)continue;
+    ctx.globalAlpha=p.l/p.ml;ctx.fillStyle=p.c;ctx.fillRect(p.x,p.y,p.s,p.s);
+    p.x+=p.vx;p.y+=p.vy;p.l--;alive.push(p);
+  }
+  ctx.globalAlpha=1;particles=alive;
+}
+
+function updateHUD(){
+  document.getElementById('lives').textContent='❤️'.repeat(lives)+'🖤'.repeat(4-lives);
+  document.getElementById('killed').textContent=killed;
+}
+function closestEnemy(){
+  var best=null;
+  for(var i=0;i<enemies.length;i++){if(enemies[i].alive&&(!best||enemies[i].x<best.x))best=enemies[i];}
+  return best;
+}
+
+function render(){
+  var dx=0,dy=0;
+  if(shakeT>0){dx=(Math.random()-.5)*7;dy=(Math.random()-.5)*5;shakeT--;}
+  ctx.save();ctx.translate(dx,dy);
+  drawBG();drawCastle();drawParticles();drawHero(HERO_X);
+  for(var i=0;i<enemies.length;i++)drawGoblin(enemies[i]);
+  if(gameState==='playing'){
+    for(var i=0;i<enemies.length;i++){if(enemies[i].alive)enemies[i].x-=enemies[i].speed;}
+    for(var i=enemies.length-1;i>=0;i--){
+      var e=enemies[i];
+      if(e.alive&&e.x<=HERO_X+12){
+        e.alive=false;lives--;shakeT=12;sfxHit();
+        spawnFx(HERO_X+20,GROUND_Y-20,'#e74c3c',16,true);
+        updateHUD();
+        if(lives<=0){ctx.restore();endGame();return;}
+      }
+    }
+    var alive=[];for(var i=0;i<enemies.length;i++){if(enemies[i].alive||enemies[i].flashT>0)alive.push(enemies[i]);}
+    enemies=alive;
+  }
+  ctx.restore();
+  if(gameState==='playing')raf=requestAnimationFrame(render);
+}
+
+function genOpts(correct){
+  var opts=[correct],tries=0;
+  while(opts.length<4&&tries<100){tries++;var v=correct+Math.floor(Math.random()*14)-7;if(v>0&&opts.indexOf(v)===-1)opts.push(v);}
+  opts.sort(function(){return Math.random()-.5;});return opts;
+}
+function renderAnswerBtns(opts){
+  var div=document.getElementById('answers');div.innerHTML='';
+  for(var i=0;i<opts.length;i++){
+    (function(opt){var btn=document.createElement('button');btn.className='ab';btn.textContent=opt;btn.onclick=function(){answer(opt,btn);};div.appendChild(btn);})(opts[i]);
+  }
+}
+function showQ(){
+  locked=false;
+  var tables=[2,3,4,5,6,7,8,9];
+  var a=tables[Math.floor(Math.random()*tables.length)];
+  var b=2+Math.floor(Math.random()*9);
+  currentQ={a:a,b:b,correct:a*b};
+  document.getElementById('question').textContent=a+' × '+b+' = ?';
+  document.getElementById('msg').textContent='';
+  renderAnswerBtns(genOpts(currentQ.correct));
+}
+function retryQ(){
+  locked=false;document.getElementById('msg').textContent='';
+  renderAnswerBtns(genOpts(currentQ.correct));
+}
+function answer(val,btn){
+  if(locked)return;locked=true;
+  var btns=document.querySelectorAll('.ab');for(var i=0;i<btns.length;i++)btns[i].onclick=null;
+  if(val===currentQ.correct){
+    btn.classList.add('ok');sfxOk();document.getElementById('msg').textContent='✅ Bien joué !';
+    var t=closestEnemy();
+    if(t){t.hp--;t.flashT=8;spawnFx(t.x+10,t.y+10,'#f5a623',10);if(t.hp<=0){t.alive=false;killed++;spawnFx(t.x+10,t.y+10,t.pal.body,20,true);updateHUD();}}
+    if(gameState==='playing')setTimeout(showQ,300);
+  } else {
+    btn.classList.add('ko');sfxBad();document.getElementById('msg').textContent='❌ Raté ! Réessaie…';
+    var key=currentQ.a+'x'+currentQ.b;errorMap[key]=(errorMap[key]||0)+1;
+    if(gameState==='playing')setTimeout(retryQ,800);
+  }
+}
+
+function addScore(name,secs,kld){
+  scores.push({name:name||'Anonyme',secs:secs,killed:kld});
+  scores.sort(function(a,b){return b.secs-a.secs||b.killed-a.killed;});
+  if(scores.length>10)scores=scores.slice(0,10);
+}
+function renderLB(){
+  if(scores.length===0)return '<div class="empty">Aucun score encore</div>';
+  var medals=['🥇','🥈','🥉'],cls=['gold','silver','bronze'],html='';
+  for(var i=0;i<scores.length;i++){
+    var s=scores[i],c=cls[i]||'normal',m=medals[i]||('#'+(i+1));
+    html+='<div class="row '+c+'"><span style="width:24px">'+m+'</span><span style="flex:1;padding:0 6px">'+s.name+'</span><span style="color:#fff;font-weight:bold">'+s.secs+'s</span><span style="color:#888;margin-left:8px">'+s.killed+'👾</span></div>';
+  }
+  return html;
+}
+function renderMistakes(){
+  var entries=[],k;
+  for(k in errorMap){if(errorMap.hasOwnProperty(k))entries.push({key:k,count:errorMap[k]});}
+  if(entries.length===0)return '<div class="empty">✅ Aucune erreur — parfait !</div>';
+  entries.sort(function(a,b){return b.count-a.count;});
+  var top=entries.slice(0,3),medals=['🥇','🥈','🥉'],cls=['gold','silver','bronze'],html='';
+  for(var i=0;i<top.length;i++){
+    var parts=top[i].key.split('x'),a=parseInt(parts[0],10),b=parseInt(parts[1],10);
+    html+='<div class="row '+cls[i]+'"><span>'+medals[i]+' <b>'+a+' × '+b+' = '+(a*b)+'</b></span><span style="color:#e94560">'+top[i].count+' erreur'+(top[i].count>1?'s':'')+'</span></div>';
+  }
+  return html;
+}
+function updateBestHUD(){
+  document.getElementById('best-display').textContent=scores.length?scores[0].name+' – '+scores[0].secs+'s':'—';
+}
+
+function showMainMenu(){
+  var ov=document.getElementById('overlay');
+  ov.innerHTML='<h1>🏰 DEFEND<br>THE CASTLE 🏰</h1>'+
+    '<p class="sub">Les ennemis arrivent par la droite.<br>Réponds aux multiplications pour les éliminer.<br>4 ennemis passés = Game Over.</p>'+
+    '<button class="bigbtn" onclick="startGame()">▶ JOUER</button>'+
+    '<div class="panel"><h2>🏆 MEILLEURS SCORES</h2>'+renderLB()+'</div>';
+  ov.style.display='flex';
+}
+function showGameOver(secs,kld){
+  var isNew=scores.length===0||secs>scores[0].secs;
+  var ov=document.getElementById('overlay');
+  ov.innerHTML='<h1>💀 CHÂTEAU DÉTRUIT !</h1>'+
+    '<div id="score-entry">'+
+      '<div class="result">'+(isNew?'🎉 Nouveau record ! ':'')+' ⏱️ '+secs+'s — 👾 '+kld+' éliminé'+(kld>1?'s':'')+'</div>'+
+      '<p>Entre ton prénom :</p>'+
+      '<div id="name-row"><input id="name-input" type="text" maxlength="12" placeholder="Ton prénom..."/><button id="save-btn" onclick="saveScore('+secs+','+kld+')">✔ OK</button></div>'+
+    '</div>'+
+    '<div class="panel"><h2>📚 À RÉVISER</h2><div id="mistakes-inner">'+renderMistakes()+'</div></div>'+
+    '<div class="panel"><h2>🏆 MEILLEURS SCORES</h2><div id="lb-inner">'+renderLB()+'</div></div>'+
+    '<button class="bigbtn" onclick="startGame()">↺ Rejouer</button>';
+  ov.style.display='flex';
+  setTimeout(function(){
+    var inp=document.getElementById('name-input');
+    if(inp){inp.focus();inp.addEventListener('keydown',function(e){if(e.key==='Enter')saveScore(secs,kld);});}
+  },100);
+}
+function saveScore(secs,kld){
+  var inp=document.getElementById('name-input');
+  var name=(inp&&inp.value.trim())?inp.value.trim():'Anonyme';
+  addScore(name,secs,kld);updateBestHUD();
+  var entry=document.getElementById('score-entry');
+  if(entry)entry.innerHTML='<div class="result" style="color:#4ec94e">✅ Sauvegardé pour <b>'+name+'</b> !</div>';
+  var lb=document.getElementById('lb-inner');if(lb)lb.innerHTML=renderLB();
+}
+
+function startGame(){
+  if(AC.state==='suspended')AC.resume();
+  document.getElementById('overlay').style.display='none';
+  enemies=[];particles=[];shakeT=0;
+  lives=4;killed=0;survivalSecs=0;errorMap={};
+  gameState='playing';locked=false;
+  updateHUD();
+  document.getElementById('timer').textContent='0s';
+  clearTimeout(spawnTO);clearInterval(timerInt);cancelAnimationFrame(raf);
+  spawnEnemy(300);scheduleSpawn();
+  timerInt=setInterval(function(){if(gameState!=='playing')return;survivalSecs++;document.getElementById('timer').textContent=survivalSecs+'s';},1000);
+  render();showQ();
+}
+function endGame(){
+  gameState='over';clearTimeout(spawnTO);clearInterval(timerInt);cancelAnimationFrame(raf);
+  sfxDie();showGameOver(survivalSecs,killed);
+}
+
+drawBG();drawCastle();drawHero(HERO_X);
+showMainMenu();
+</script>
 </body>
 </html>
