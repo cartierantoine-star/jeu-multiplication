@@ -9,6 +9,8 @@
 html,body{touch-action:manipulation;}
 body{background:#0d2a0d;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;font-family:'Courier New',monospace;color:#fff;overflow-x:hidden;padding:8px;}
 #wrap{position:relative;width:100%;max-width:560px;}
+#game-col{width:100%;}
+#q-col{width:100%;}
 canvas{display:block;border:3px solid #4ec94e;width:100%;height:auto;image-rendering:pixelated;}
 #hud{display:flex;justify-content:space-between;flex-wrap:wrap;padding:5px 8px;background:#0d2a0d;border:2px solid #4ec94e;border-bottom:none;font-size:13px;gap:4px;}
 #hud span{color:#ffe066;font-weight:bold;}
@@ -50,14 +52,22 @@ canvas{display:block;border:3px solid #4ec94e;width:100%;height:auto;image-rende
   #rotate-msg{display:flex;}
   #wrap{display:none;}
 }
-@media(max-width:600px) and (orientation:landscape){
-  body{padding:4px;justify-content:flex-start;}
-  #hud{font-size:11px;padding:4px 6px;}
-  #question{font-size:20px;letter-spacing:2px;}
-  .ab{padding:10px 16px;font-size:18px;min-width:55px;min-height:44px;}
+@media(max-height:500px) and (orientation:landscape){
+  body{padding:2px;justify-content:center;}
+  #wrap{display:flex;flex-direction:row;max-width:100%;gap:0;}
+  #game-col{flex:1;min-width:0;display:flex;flex-direction:column;}
+  #q-col{width:200px;min-width:200px;display:flex;flex-direction:column;justify-content:center;}
+  #hud{font-size:10px;padding:2px 6px;border:2px solid #4ec94e;border-bottom:none;}
+  canvas{border:2px solid #4ec94e;flex:1;min-height:0;}
+  #qzone{border:2px solid #4ec94e;border-left:none;padding:8px;display:flex;flex-direction:column;justify-content:center;height:100%;}
+  #question{font-size:18px;letter-spacing:1px;margin-bottom:6px;}
+  #msg{font-size:11px;margin-bottom:4px;min-height:14px;}
+  #answers{flex-direction:column;gap:6px;}
+  .ab{padding:10px 14px;font-size:16px;min-height:40px;min-width:unset;width:100%;}
+  #overlay{position:fixed;}
   #overlay h1{font-size:16px;}
-  .sub{font-size:11px;}
-  .bigbtn{font-size:14px;}
+  .sub{font-size:10px;}
+  .bigbtn{font-size:13px;padding:8px 20px;min-height:40px;}
   .panel{max-width:100%;}
   #score-entry{max-width:100%;padding:8px 10px;}
 }
@@ -70,17 +80,21 @@ canvas{display:block;border:3px solid #4ec94e;width:100%;height:auto;image-rende
   <div class="rotate-sub">Le jeu est optimise en mode horizontal</div>
 </div>
 <div id="wrap">
-  <div id="hud">
-    <div><span id="lives">❤️❤️❤️❤️</span></div>
-    <div>⏱️ <span id="timer">0s</span></div>
-    <div style="color:#aed6ae;font-size:12px">🏆 <span id="best-display">—</span></div>
-    <div>👾 <span id="killed">0</span> éliminés</div>
+  <div id="game-col">
+    <div id="hud">
+      <div><span id="lives">❤️❤️❤️❤️</span></div>
+      <div>⏱️ <span id="timer">0s</span></div>
+      <div style="color:#aed6ae;font-size:12px">🏆 <span id="best-display">—</span></div>
+      <div>👾 <span id="killed">0</span> éliminés</div>
+    </div>
+    <canvas id="c" width="560" height="240"></canvas>
   </div>
-  <canvas id="c" width="560" height="240"></canvas>
-  <div id="qzone">
-    <div id="msg"></div>
-    <div id="question">? × ? = ?</div>
-    <div id="answers"></div>
+  <div id="q-col">
+    <div id="qzone">
+      <div id="msg"></div>
+      <div id="question">? × ? = ?</div>
+      <div id="answers"></div>
+    </div>
   </div>
 </div>
 <div id="overlay"></div>
