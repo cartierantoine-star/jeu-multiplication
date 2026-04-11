@@ -2,26 +2,29 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Defend the Castle</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0d2a0d;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:'Courier New',monospace;color:#fff;overflow:hidden;}
-#wrap{position:relative;width:560px;}
-canvas{display:block;border:3px solid #4ec94e;width:560px;height:200px;image-rendering:pixelated;}
-#hud{display:flex;justify-content:space-between;padding:5px 12px;background:#0d2a0d;border:2px solid #4ec94e;border-bottom:none;font-size:13px;}
+html,body{touch-action:manipulation;}
+body{background:#0d2a0d;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;font-family:'Courier New',monospace;color:#fff;overflow-x:hidden;padding:8px;}
+#wrap{position:relative;width:100%;max-width:560px;}
+canvas{display:block;border:3px solid #4ec94e;width:100%;height:auto;image-rendering:pixelated;}
+#hud{display:flex;justify-content:space-between;flex-wrap:wrap;padding:5px 8px;background:#0d2a0d;border:2px solid #4ec94e;border-bottom:none;font-size:13px;gap:4px;}
 #hud span{color:#ffe066;font-weight:bold;}
 #qzone{background:#0d2a0d;border:2px solid #4ec94e;border-top:none;padding:10px 14px;text-align:center;}
 #question{font-size:26px;letter-spacing:3px;margin-bottom:8px;color:#fff;}
-#answers{display:flex;gap:10px;justify-content:center;}
-.ab{padding:9px 22px;background:#1a4a1a;border:2px solid #4ec94e;color:#fff;font-family:'Courier New',monospace;font-size:17px;cursor:pointer;transition:all .1s;}
+#answers{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.ab{padding:12px 24px;min-width:60px;min-height:48px;background:#1a4a1a;border:2px solid #4ec94e;color:#fff;font-family:'Courier New',monospace;font-size:18px;cursor:pointer;transition:all .1s;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
 .ab:hover{background:#4ec94e;color:#0d2a0d;transform:scale(1.07);}
+.ab:active{background:#4ec94e;color:#0d2a0d;}
 .ab.ok{background:#27ae60;border-color:#2ecc71;}
 .ab.ko{background:#c0392b;border-color:#e74c3c;}
 #msg{font-size:13px;min-height:16px;color:#ffe066;margin-bottom:6px;}
 #overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,20,0,.93);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:10;padding:14px;overflow-y:auto;}
 #overlay h1{font-size:22px;color:#ffe066;text-shadow:2px 2px #27ae60;text-align:center;line-height:1.4;}
 .sub{color:#aed6ae;font-size:12px;text-align:center;max-width:360px;line-height:1.7;}
-.bigbtn{padding:10px 28px;background:#27ae60;border:none;color:#fff;font-family:'Courier New',monospace;font-size:16px;cursor:pointer;letter-spacing:2px;}
+.bigbtn{padding:12px 28px;background:#27ae60;border:none;color:#fff;font-family:'Courier New',monospace;font-size:16px;cursor:pointer;letter-spacing:2px;min-height:48px;-webkit-tap-highlight-color:transparent;}
 .bigbtn:hover{background:#ffe066;color:#0d2a0d;}
 .panel{width:100%;max-width:360px;background:#0a1f0a;border:2px solid #4ec94e;padding:8px 12px;}
 .panel h2{font-size:12px;color:#ffe066;text-align:center;margin-bottom:6px;letter-spacing:2px;}
@@ -35,12 +38,37 @@ canvas{display:block;border:3px solid #4ec94e;width:560px;height:200px;image-ren
 #score-entry .result{font-size:16px;color:#fff;}
 #score-entry p{font-size:12px;color:#ffe066;}
 #name-row{display:flex;gap:8px;}
-#name-input{background:#1a4a1a;border:2px solid #4ec94e;color:#fff;font-family:'Courier New',monospace;font-size:15px;padding:6px 10px;width:155px;outline:none;}
+#name-input{background:#1a4a1a;border:2px solid #4ec94e;color:#fff;font-family:'Courier New',monospace;font-size:16px;padding:8px 10px;width:155px;outline:none;}
 #name-input:focus{border-color:#ffe066;}
-#save-btn{padding:6px 12px;background:#27ae60;border:2px solid #2ecc71;color:#fff;font-family:'Courier New',monospace;font-size:14px;cursor:pointer;}
+#save-btn{padding:8px 14px;background:#27ae60;border:2px solid #2ecc71;color:#fff;font-family:'Courier New',monospace;font-size:14px;cursor:pointer;min-height:44px;}
+#rotate-msg{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0d2a0d;z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:#fff;font-family:'Courier New',monospace;text-align:center;padding:20px;}
+#rotate-msg .rotate-icon{font-size:64px;animation:wiggle 1.5s ease-in-out infinite;}
+#rotate-msg p{font-size:18px;color:#ffe066;line-height:1.6;}
+#rotate-msg .rotate-sub{font-size:13px;color:#aed6ae;}
+@keyframes wiggle{0%,100%{transform:rotate(0deg);}25%{transform:rotate(-20deg);}75%{transform:rotate(20deg);}}
+@media(max-width:900px) and (orientation:portrait){
+  #rotate-msg{display:flex;}
+  #wrap{display:none;}
+}
+@media(max-width:600px) and (orientation:landscape){
+  body{padding:4px;justify-content:flex-start;}
+  #hud{font-size:11px;padding:4px 6px;}
+  #question{font-size:20px;letter-spacing:2px;}
+  .ab{padding:10px 16px;font-size:18px;min-width:55px;min-height:44px;}
+  #overlay h1{font-size:16px;}
+  .sub{font-size:11px;}
+  .bigbtn{font-size:14px;}
+  .panel{max-width:100%;}
+  #score-entry{max-width:100%;padding:8px 10px;}
+}
 </style>
 </head>
 <body>
+<div id="rotate-msg">
+  <div class="rotate-icon">📱</div>
+  <p>Tourne ton telephone<br>en paysage pour jouer !</p>
+  <div class="rotate-sub">Le jeu est optimise en mode horizontal</div>
+</div>
 <div id="wrap">
   <div id="hud">
     <div><span id="lives">❤️❤️❤️❤️</span></div>
